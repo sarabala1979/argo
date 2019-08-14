@@ -81,18 +81,18 @@ type TemplateHolder interface {
 // +genclient:noStatus
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type Workflow struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata"`
-	Spec              WorkflowSpec   `json:"spec"`
-	Status            WorkflowStatus `json:"status"`
+	metav1.TypeMeta   `json:",inline "`
+	metav1.ObjectMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Spec              WorkflowSpec   `json:"spec" protobuf:"bytes,2,opt,name=spec "`
+	Status            WorkflowStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
 }
 
 // WorkflowList is list of Workflow resources
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type WorkflowList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
-	Items           []Workflow `json:"items"`
+	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []Workflow `json:"items" protobuf:"bytes,2,opt,name=items"`
 }
 
 var _ TemplateGetter = &Workflow{}
@@ -100,56 +100,56 @@ var _ TemplateGetter = &Workflow{}
 // WorkflowSpec is the specification of a Workflow.
 type WorkflowSpec struct {
 	// Templates is a list of workflow templates used in a workflow
-	Templates []Template `json:"templates"`
+	Templates []Template `json:"templates" protobuf:"bytes,1,opt,name=templates"`
 
 	// Entrypoint is a template reference to the starting point of the workflow
-	Entrypoint string `json:"entrypoint"`
+	Entrypoint string `json:"entrypoint" protobuf:"bytes,2,opt,name=entrypoint"`
 
 	// Arguments contain the parameters and artifacts sent to the workflow entrypoint
 	// Parameters are referencable globally using the 'workflow' variable prefix.
 	// e.g. {{workflow.parameters.myparam}}
-	Arguments Arguments `json:"arguments,omitempty"`
+	Arguments Arguments `json:"arguments,omitempty" protobuf:"bytes,3,opt,name=arguments"`
 
 	// ServiceAccountName is the name of the ServiceAccount to run all pods of the workflow as.
-	ServiceAccountName string `json:"serviceAccountName,omitempty"`
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,4,opt,name=serviceAccountName"`
 
 	// Volumes is a list of volumes that can be mounted by containers in a workflow.
-	Volumes []apiv1.Volume `json:"volumes,omitempty"`
+	Volumes []apiv1.Volume `json:"volumes,omitempty" protobuf:"bytes,5,opt,name=volumes"`
 
 	// VolumeClaimTemplates is a list of claims that containers are allowed to reference.
 	// The Workflow controller will create the claims at the beginning of the workflow
 	// and delete the claims upon completion of the workflow
-	VolumeClaimTemplates []apiv1.PersistentVolumeClaim `json:"volumeClaimTemplates,omitempty"`
+	VolumeClaimTemplates []apiv1.PersistentVolumeClaim `json:"volumeClaimTemplates,omitempty" protobuf:"bytes,6,opt,name=volumeClaimTemplates"`
 
 	// Parallelism limits the max total parallel pods that can execute at the same time in a workflow
-	Parallelism *int64 `json:"parallelism,omitempty"`
+	Parallelism *int64 `json:"parallelism,omitempty" protobuf:"bytes,7,opt,name=parallelism"`
 
 	// ArtifactRepositoryRef specifies the configMap name and key containing the artifact repository config.
-	ArtifactRepositoryRef *ArtifactRepositoryRef `json:"artifactRepositoryRef,omitempty"`
+	ArtifactRepositoryRef *ArtifactRepositoryRef `json:"artifactRepositoryRef,omitempty" protobuf:"bytes,8,opt,name=artifactRepositoryRef"`
 
 	// Suspend will suspend the workflow and prevent execution of any future steps in the workflow
-	Suspend *bool `json:"suspend,omitempty"`
+	Suspend *bool `json:"suspend,omitempty" protobuf:"bytes,9,opt,name=suspend"`
 
 	// NodeSelector is a selector which will result in all pods of the workflow
 	// to be scheduled on the selected node(s). This is able to be overridden by
 	// a nodeSelector specified in the template.
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,10,opt,name=nodeSelector"`
 
 	// Affinity sets the scheduling constraints for all pods in the workflow.
 	// Can be overridden by an affinity specified in the template
-	Affinity *apiv1.Affinity `json:"affinity,omitempty"`
+	Affinity *apiv1.Affinity `json:"affinity,omitempty" protobuf:"bytes,11,opt,name=affinity"`
 
 	// Tolerations to apply to workflow pods.
-	Tolerations []apiv1.Toleration `json:"tolerations,omitempty"`
+	Tolerations []apiv1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,12,opt,name=tolerations"`
 
 	// ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
 	// in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets
 	// can be mounted in the pod, but ImagePullSecrets are only accessed by the kubelet.
 	// More info: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-	ImagePullSecrets []apiv1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
+	ImagePullSecrets []apiv1.LocalObjectReference `json:"imagePullSecrets,omitempty" protobuf:"bytes,13,opt,name=imagePullSecrets"`
 
 	// Host networking requested for this workflow pod. Default to false.
-	HostNetwork *bool `json:"hostNetwork,omitempty"`
+	HostNetwork *bool `json:"hostNetwork,omitempty" protobuf:"bytes,14,opt,name=hostNetwork"`
 
 	// Set DNS policy for the pod.
 	// Defaults to "ClusterFirst".
@@ -157,162 +157,162 @@ type WorkflowSpec struct {
 	// DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy.
 	// To have DNS options set along with hostNetwork, you have to specify DNS policy
 	// explicitly to 'ClusterFirstWithHostNet'.
-	DNSPolicy *apiv1.DNSPolicy `json:"dnsPolicy,omitempty"`
+	DNSPolicy *apiv1.DNSPolicy `json:"dnsPolicy,omitempty" protobuf:"bytes,15,opt,name=dnsPolicy"`
 
 	// PodDNSConfig defines the DNS parameters of a pod in addition to
 	// those generated from DNSPolicy.
-	DNSConfig *apiv1.PodDNSConfig `json:"dnsConfig,omitempty"`
+	DNSConfig *apiv1.PodDNSConfig `json:"dnsConfig,omitempty" protobuf:"bytes,16,opt,name=dnsConfig"`
 
 	// OnExit is a template reference which is invoked at the end of the
 	// workflow, irrespective of the success, failure, or error of the
 	// primary workflow.
-	OnExit string `json:"onExit,omitempty"`
+	OnExit string `json:"onExit,omitempty" protobuf:"bytes,17,opt,name=onExit"`
 
 	// TTLSecondsAfterFinished limits the lifetime of a Workflow that has finished execution
 	// (Succeeded, Failed, Error). If this field is set, once the Workflow finishes, it will be
 	// deleted after ttlSecondsAfterFinished expires. If this field is unset,
 	// ttlSecondsAfterFinished will not expire. If this field is set to zero,
 	// ttlSecondsAfterFinished expires immediately after the Workflow finishes.
-	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
+	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty" protobuf:"bytes,18,opt,name=ttlSecondsAfterFinished"`
 
 	// Optional duration in seconds relative to the workflow start time which the workflow is
 	// allowed to run before the controller terminates the workflow. A value of zero is used to
 	// terminate a Running workflow
-	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" protobuf:"bytes,19,opt,name=activeDeadlineSeconds"`
 
 	// Priority is used if controller is configured to process limited number of workflows in parallel. Workflows with higher priority are processed first.
-	Priority *int32 `json:"priority,omitempty"`
+	Priority *int32 `json:"priority,omitempty" protobuf:"bytes,20,opt,name=priority"`
 
 	// Set scheduler name for all pods.
 	// Will be overridden if container/script template's scheduler name is set.
 	// Default scheduler will be used if neither specified.
 	// +optional
-	SchedulerName string `json:"schedulerName,omitempty"`
+	SchedulerName string `json:"schedulerName,omitempty" protobuf:"bytes,21,opt,name=schedulerName"`
 
 	// PodGC describes the strategy to use when to deleting completed pods
 	PodGC *PodGC `json:"podGC,omitempty"`
 
 	// PriorityClassName to apply to workflow pods.
-	PodPriorityClassName string `json:"podPriorityClassName,omitempty"`
+	PodPriorityClassName string `json:"podPriorityClassName,omitempty" protobuf:"bytes,22,opt,name=podPriorityClassName"`
 
 	// Priority to apply to workflow pods.
-	PodPriority *int32 `json:"podPriority,omitempty"`
+	PodPriority *int32 `json:"podPriority,omitempty" protobuf:"bytes,23,opt,name=podPriority"`
 
 	// HostAliases is an optional list of hosts and IPs that will be injected into the pod spec
-	HostAliases []apiv1.HostAlias `json:"hostAliases,omitempty"`
+	HostAliases []apiv1.HostAlias `json:"hostAliases,omitempty" protobuf:"bytes,24,opt,name=hostAliases"`
 
 	// SecurityContext holds pod-level security attributes and common container settings.
 	// Optional: Defaults to empty.  See type description for default values of each field.
 	// +optional
-	SecurityContext *apiv1.PodSecurityContext `json:"securityContext,omitempty"`
+	SecurityContext *apiv1.PodSecurityContext `json:"securityContext,omitempty" protobuf:"bytes,25,opt,name=securityContext"`
 }
 
 // Template is a reusable and composable unit of execution in a workflow
 type Template struct {
 	// Name is the name of the template
-	Name string `json:"name"`
+	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
 
 	// Template is the name of the template which is used as the base of this template.
-	Template string `json:"template,omitempty"`
+	Template string `json:"template,omitempty" protobuf:"bytes,2,opt,name=template"`
 
 	// Arguments hold arguments to the template.
-	Arguments Arguments `json:"arguments,omitempty"`
+	Arguments Arguments `json:"arguments,omitempty" protobuf:"bytes,3,opt,name=arguments"`
 
 	// TemplateRef is the reference to the template resource which is used as the base of this template.
-	TemplateRef *TemplateRef `json:"templateRef,omitempty"`
+	TemplateRef *TemplateRef `json:"templateRef,omitempty" protobuf:"bytes,4,opt,name=templateRef"`
 
 	// Inputs describe what inputs parameters and artifacts are supplied to this template
-	Inputs Inputs `json:"inputs,omitempty"`
+	Inputs Inputs `json:"inputs,omitempty" protobuf:"bytes,5,opt,name=inputs"`
 
 	// Outputs describe the parameters and artifacts that this template produces
-	Outputs Outputs `json:"outputs,omitempty"`
+	Outputs Outputs `json:"outputs,omitempty" protobuf:"bytes,6,opt,name=outputs"`
 
 	// NodeSelector is a selector to schedule this step of the workflow to be
 	// run on the selected node(s). Overrides the selector set at the workflow level.
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	NodeSelector map[string]string `json:"nodeSelector,omitempty" protobuf:"bytes,7,opt,name=nodeSelector"`
 
 	// Affinity sets the pod's scheduling constraints
 	// Overrides the affinity set at the workflow level (if any)
-	Affinity *apiv1.Affinity `json:"affinity,omitempty"`
+	Affinity *apiv1.Affinity `json:"affinity,omitempty" protobuf:"bytes,8,opt,name=affinity"`
 
 	// Metdata sets the pods's metadata, i.e. annotations and labels
-	Metadata Metadata `json:"metadata,omitempty"`
+	Metadata Metadata `json:"metadata,omitempty" protobuf:"bytes,9,opt,name=metadata"`
 
 	// Deamon will allow a workflow to proceed to the next step so long as the container reaches readiness
-	Daemon *bool `json:"daemon,omitempty"`
+	Daemon *bool `json:"daemon,omitempty" protobuf:"bytes,10,opt,name=daemon"`
 
 	// Steps define a series of sequential/parallel workflow steps
-	Steps [][]WorkflowStep `json:"steps,omitempty"`
+	Steps [][]WorkflowStep `json:"steps,omitempty" protobuf:"bytes,11,opt,name=steps"`
 
 	// Container is the main container image to run in the pod
-	Container *apiv1.Container `json:"container,omitempty"`
+	Container *apiv1.Container `json:"container,omitempty" protobuf:"bytes,12,opt,name=container"`
 
 	// Script runs a portion of code against an interpreter
-	Script *ScriptTemplate `json:"script,omitempty"`
+	Script *ScriptTemplate `json:"script,omitempty" protobuf:"bytes,13,opt,name=script"`
 
 	// Resource template subtype which can run k8s resources
-	Resource *ResourceTemplate `json:"resource,omitempty"`
+	Resource *ResourceTemplate `json:"resource,omitempty" protobuf:"bytes,14,opt,name=resource"`
 
 	// DAG template subtype which runs a DAG
-	DAG *DAGTemplate `json:"dag,omitempty"`
+	DAG *DAGTemplate `json:"dag,omitempty" protobuf:"bytes,15,opt,name=dag"`
 
 	// Suspend template subtype which can suspend a workflow when reaching the step
-	Suspend *SuspendTemplate `json:"suspend,omitempty"`
+	Suspend *SuspendTemplate `json:"suspend,omitempty" protobuf:"bytes,16,opt,name=suspend"`
 
 	// Volumes is a list of volumes that can be mounted by containers in a template.
-	Volumes []apiv1.Volume `json:"volumes,omitempty"`
+	Volumes []apiv1.Volume `json:"volumes,omitempty" protobuf:"bytes,17,opt,name=volumes"`
 
 	// InitContainers is a list of containers which run before the main container.
-	InitContainers []UserContainer `json:"initContainers,omitempty"`
+	InitContainers []UserContainer `json:"initContainers,omitempty" protobuf:"bytes,18,opt,name=initContainers"`
 
 	// Sidecars is a list of containers which run alongside the main container
 	// Sidecars are automatically killed when the main container completes
-	Sidecars []UserContainer `json:"sidecars,omitempty"`
+	Sidecars []UserContainer `json:"sidecars,omitempty" protobuf:"bytes,19,opt,name=sidecars"`
 
 	// Location in which all files related to the step will be stored (logs, artifacts, etc...).
 	// Can be overridden by individual items in Outputs. If omitted, will use the default
 	// artifact repository location configured in the controller, appended with the
 	// <workflowname>/<nodename> in the key.
-	ArchiveLocation *ArtifactLocation `json:"archiveLocation,omitempty"`
+	ArchiveLocation *ArtifactLocation `json:"archiveLocation,omitempty" protobuf:"bytes,20,opt,name=archiveLocation"`
 
 	// Optional duration in seconds relative to the StartTime that the pod may be active on a node
 	// before the system actively tries to terminate the pod; value must be positive integer
 	// This field is only applicable to container and script templates.
-	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" protobuf:"bytes,21,opt,name=activeDeadlineSeconds"`
 
 	// RetryStrategy describes how to retry a template when it fails
-	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty"`
+	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty" protobuf:"bytes,22,opt,name=retryStrategy"`
 
 	// Parallelism limits the max total parallel pods that can execute at the same time within the
 	// boundaries of this template invocation. If additional steps/dag templates are invoked, the
 	// pods created by those templates will not be counted towards this total.
-	Parallelism *int64 `json:"parallelism,omitempty"`
+	Parallelism *int64 `json:"parallelism,omitempty" protobuf:"bytes,23,opt,name=parallelism"`
 
 	// Tolerations to apply to workflow pods.
-	Tolerations []apiv1.Toleration `json:"tolerations,omitempty"`
+	Tolerations []apiv1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,24,opt,name=tolerations"`
 
 	// If specified, the pod will be dispatched by specified scheduler.
 	// Or it will be dispatched by workflow scope scheduler if specified.
 	// If neither specified, the pod will be dispatched by default scheduler.
 	// +optional
-	SchedulerName string `json:"schedulerName,omitempty"`
+	SchedulerName string `json:"schedulerName,omitempty" protobuf:"bytes,25,opt,name=schedulerName"`
 
 	// PriorityClassName to apply to workflow pods.
-	PriorityClassName string `json:"priorityClassName,omitempty"`
+	PriorityClassName string `json:"priorityClassName,omitempty" protobuf:"bytes,26,opt,name=priorityClassName"`
 
 	// Priority to apply to workflow pods.
-	Priority *int32 `json:"priority,omitempty"`
+	Priority *int32 `json:"priority,omitempty" protobuf:"bytes,27,opt,name=priority"`
 
 	// ServiceAccountName to apply to workflow pods
-	ServiceAccountName string `json:"serviceAccountName,omitempty"`
+	ServiceAccountName string `json:"serviceAccountName,omitempty" protobuf:"bytes,28,opt,name=serviceAccountName"`
 
 	// HostAliases is an optional list of hosts and IPs that will be injected into the pod spec
-	HostAliases []apiv1.HostAlias `json:"hostAliases,omitempty"`
+	HostAliases []apiv1.HostAlias `json:"hostAliases,omitempty" protobuf:"bytes,29,opt,name=hostAliases"`
 
 	// SecurityContext holds pod-level security attributes and common container settings.
 	// Optional: Defaults to empty.  See type description for default values of each field.
 	// +optional
-	SecurityContext *apiv1.PodSecurityContext `json:"securityContext,omitempty"`
+	SecurityContext *apiv1.PodSecurityContext `json:"securityContext,omitempty" protobuf:"bytes,30,opt,name=securityContext"`
 }
 
 var _ TemplateHolder = &Template{}
@@ -332,16 +332,16 @@ func (tmpl *Template) GetTemplateRef() *TemplateRef {
 // Inputs are the mechanism for passing parameters, artifacts, volumes from one template to another
 type Inputs struct {
 	// Parameters are a list of parameters passed as inputs
-	Parameters []Parameter `json:"parameters,omitempty"`
+	Parameters []Parameter `json:"parameters,omitempty" protobuf:"bytes,1,opt,name=parameters"`
 
 	// Artifact are a list of artifacts passed as inputs
-	Artifacts []Artifact `json:"artifacts,omitempty"`
+	Artifacts []Artifact `json:"artifacts,omitempty" protobuf:"bytes,2,opt,name=artifacts"`
 }
 
 // Pod metdata
 type Metadata struct {
-	Annotations map[string]string `json:"annotations,omitempty"`
-	Labels      map[string]string `json:"labels,omitempty"`
+	Annotations map[string]string `json:"annotations,omitempty" protobuf:"bytes,1,opt,name=annotations""`
+	Labels      map[string]string `json:"labels,omitempty" protobuf:"bytes,2,opt,name=labels"`
 }
 
 // Parameter indicate a passed string parameter to a service template with an optional default value

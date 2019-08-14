@@ -3,6 +3,13 @@ required = [
   "k8s.io/code-generator/cmd/deepcopy-gen",
   "k8s.io/code-generator/cmd/informer-gen",
   "k8s.io/code-generator/cmd/lister-gen",
+  "k8s.io/code-generator/cmd/go-to-protobuf",
+  "github.com/golang/protobuf/protoc-gen-go",
+  "github.com/gogo/protobuf/protoc-gen-gofast",
+  "github.com/gogo/protobuf/protoc-gen-gogofast",
+  "k8s.io/code-generator/cmd/go-to-protobuf",
+  "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway",
+  "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger",
 ]
 
 [[constraint]]
@@ -71,4 +78,21 @@ required = [
 [[constraint]]
   name = "upper.io/db.v3"
   version ="3.5.7"
+
+[[constraint]]
+name = "google.golang.org/grpc"
+version = "1.15.0"
+
+[[constraint]]
+name = "github.com/gogo/protobuf"
+version = "1.1.1"
+
+# override github.com/grpc-ecosystem/go-grpc-middleware's constraint on master
+[[override]]
+name = "github.com/golang/protobuf"
+version = "1.2.0"
+
+[[constraint]]
+name = "github.com/grpc-ecosystem/grpc-gateway"
+version = "v1.3.1"
 
