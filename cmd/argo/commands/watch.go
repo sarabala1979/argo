@@ -93,7 +93,7 @@ func watchWorkflow(ctx context.Context, serviceClient workflowpkg.WorkflowServic
 		}
 
 		printWorkflowStatus(wf, getArgs)
-		if !wf.Status.FinishedAt.IsZero() {
+		if wf != nil && !wf.Status.FinishedAt.IsZero() {
 			return
 		}
 	}
