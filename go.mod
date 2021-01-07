@@ -3,11 +3,11 @@ module github.com/argoproj/argo
 go 1.13
 
 require (
-	bou.ke/staticfiles v0.0.0-20190225145250-827d7f6389cd
+	bou.ke/staticfiles v0.0.0-20210106104248-dd04075d4104
 	cloud.google.com/go v0.55.0 // indirect
 	cloud.google.com/go/storage v1.6.0
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible
-	github.com/aliyun/aliyun-oss-go-sdk v2.0.6+incompatible
+	github.com/aliyun/aliyun-oss-go-sdk v2.1.5+incompatible
 	github.com/antonmedv/expr v1.8.8
 	github.com/argoproj/argo-events v1.1.0
 	github.com/argoproj/pkg v0.3.0
@@ -31,6 +31,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.14.6
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jstemmer/go-junit-report v0.9.1
+	github.com/lib/pq v1.9.0 // indirect
 	github.com/mattn/goreman v0.3.5
 	github.com/minio/minio-go/v7 v7.0.2
 	github.com/mitchellh/go-ps v0.0.0-20190716172923-621e5597135b

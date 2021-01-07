@@ -1,0 +1,74 @@
+[36mINFO[0m[2021-01-07T08:47:46.130Z] config map                                    [36mname[0m=workflow-controller-configmap
+[36mINFO[0m[2021-01-07T08:47:46.204Z] Configuration:
+artifactRepository:
+  archiveLogs: true
+  s3:
+    accessKeySecret:
+      key: accesskey
+      name: my-minio-cred
+    bucket: my-bucket
+    endpoint: minio:9000
+    insecure: true
+    secretKeySecret:
+      key: secretkey
+      name: my-minio-cred
+containerRuntimeExecutor: pns
+executor:
+  imagePullPolicy: IfNotPresent
+  name: ""
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 64Mi
+initialDelay: 0s
+links:
+- name: Example Workflow Link
+  scope: workflow
+  url: http://logging-facility?namespace=${metadata.namespace}&workflowName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+- name: Example Pod Link
+  scope: pod
+  url: http://logging-facility?namespace=${metadata.namespace}&podName=${metadata.name}&startedAt=${status.startedAt}&finishedAt=${status.finishedAt}
+metricsConfig:
+  disableLegacy: true
+  enabled: true
+  path: /metrics
+  port: 9090
+nodeEvents: {}
+podSpecLogStrategy: {}
+telemetryConfig: {} 
+[36mINFO[0m[2021-01-07T08:47:46.204Z] Persistence configuration disabled           
+[36mINFO[0m[2021-01-07T08:47:46.204Z] Starting Workflow Controller                  [36mversion[0m=v0.0.0+unknown
+[36mINFO[0m[2021-01-07T08:47:46.205Z] Workers: workflow: 32, pod: 32, pod cleanup: 4 
+[37mDEBU[0m[2021-01-07T08:47:46.223Z] received config map kube-system/kubeadm-config update 
+[37mDEBU[0m[2021-01-07T08:47:46.223Z] received config map local-path-storage/local-path-config update 
+[37mDEBU[0m[2021-01-07T08:47:46.226Z] received config map argo/artifact-repositories update 
+[37mDEBU[0m[2021-01-07T08:47:46.226Z] received config map argo/nats-config update  
+[37mDEBU[0m[2021-01-07T08:47:46.227Z] received config map kube-public/cluster-info update 
+[37mDEBU[0m[2021-01-07T08:47:46.227Z] received config map kube-system/coredns update 
+[37mDEBU[0m[2021-01-07T08:47:46.227Z] received config map kube-system/extension-apiserver-authentication update 
+[37mDEBU[0m[2021-01-07T08:47:46.227Z] received config map kube-system/kube-proxy update 
+[37mDEBU[0m[2021-01-07T08:47:46.228Z] received config map argo/stan-config update  
+[37mDEBU[0m[2021-01-07T08:47:46.228Z] received config map argo/workflow-controller-configmap update 
+[37mDEBU[0m[2021-01-07T08:47:46.228Z] received config map kube-system/kubelet-config-1.18 update 
+[37mDEBU[0m[2021-01-07T08:47:46.406Z] CanI                                          [37mname[0m= [37mnamespace[0m=argo [37mresource[0m=clusterworkflowtemplates [37mverb[0m=get
+[37mDEBU[0m[2021-01-07T08:47:46.423Z] CanI                                          [37mname[0m= [37mnamespace[0m=argo [37mresource[0m=clusterworkflowtemplates [37mstatus[0m="{true false  }" [37mverb[0m=get
+[37mDEBU[0m[2021-01-07T08:47:46.423Z] CanI                                          [37mname[0m= [37mnamespace[0m=argo [37mresource[0m=clusterworkflowtemplates [37mverb[0m=list
+[37mDEBU[0m[2021-01-07T08:47:46.434Z] CanI                                          [37mname[0m= [37mnamespace[0m=argo [37mresource[0m=clusterworkflowtemplates [37mstatus[0m="{true false  }" [37mverb[0m=list
+[37mDEBU[0m[2021-01-07T08:47:46.434Z] CanI                                          [37mname[0m= [37mnamespace[0m=argo [37mresource[0m=clusterworkflowtemplates [37mverb[0m=watch
+[37mDEBU[0m[2021-01-07T08:47:46.444Z] CanI                                          [37mname[0m= [37mnamespace[0m=argo [37mresource[0m=clusterworkflowtemplates [37mstatus[0m="{true false  }" [37mverb[0m=watch
+[36mINFO[0m[2021-01-07T08:47:46.568Z] Manager initialized successfully             
+I0107 08:47:46.568361    7293 leaderelection.go:242] attempting to acquire leader lease  argo/workflow-controller...
+I0107 08:47:46.614999    7293 leaderelection.go:252] successfully acquired lease argo/workflow-controller
+[36mINFO[0m[2021-01-07T08:47:46.614Z] new leader                                    [36mid[0m="test1,  KUBECONFIG=/Users/sbalasubram/.config/k3d/k3s-default/kubeconfig.yaml" [36mleader[0m="test1,  KUBECONFIG=/Users/sbalasubram/.config/k3d/k3s-default/kubeconfig.yaml"
+[37mDEBU[0m[2021-01-07T08:47:46.615Z] Event(v1.ObjectReference{Kind:"Lease", Namespace:"argo", Name:"workflow-controller", UID:"eb3e3af5-c068-47ff-a1aa-be48f4821b56", APIVersion:"coordination.k8s.io/v1", ResourceVersion:"1852287", FieldPath:""}): type: 'Normal' reason: 'LeaderElection' test1,  KUBECONFIG=/Users/sbalasubram/.config/k3d/k3s-default/kubeconfig.yaml became leader 
+[36mINFO[0m[2021-01-07T08:47:46.615Z] started leading                               [36mid[0m="test1,  KUBECONFIG=/Users/sbalasubram/.config/k3d/k3s-default/kubeconfig.yaml"
+[36mINFO[0m[2021-01-07T08:47:46.615Z] Performing periodic GC every 5m0s            
+[36mINFO[0m[2021-01-07T08:47:46.615Z] Persistence disabled - so archived workflow GC disabled - you must restart the controller if you enable this 
+[36mINFO[0m[2021-01-07T08:47:46.615Z] Starting prometheus metrics server at localhost:9090/metrics 
+[36mINFO[0m[2021-01-07T08:47:46.615Z] Starting CronWorkflow controller             
+[36mINFO[0m[2021-01-07T08:47:46.615Z] Starting workflow TTL controller (workflowTTLWorkers 4) 
+[36mINFO[0m[2021-01-07T08:47:46.615Z] Started workflow TTL worker                  
+[37mDEBU[0m[2021-01-07T08:47:46.615Z] Syncing all CronWorkflows                    

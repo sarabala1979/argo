@@ -1,0 +1,106 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  creationTimestamp: "2021-01-05T09:45:21Z"
+  generateName: synchronization-wf-level-
+  generation: 38
+  labels:
+    workflows.argoproj.io/phase: Running
+  name: synchronization-wf-level-86lx8
+  namespace: platform
+  resourceVersion: "67988089"
+  selfLink: /apis/argoproj.io/v1alpha1/namespaces/platform/workflows/synchronization-wf-level-86lx8
+  uid: 6008d163-27a1-445f-92ce-a40ba974e291
+spec:
+  arguments: {}
+  entrypoint: whalesay-steps
+  podDisruptionBudget:
+    minAvailable: 9999
+  retryStrategy:
+    limit: 1
+    retryPolicy: OnError
+  templates:
+  - arguments: {}
+    inputs: {}
+    metadata: {}
+    name: whalesay-steps
+    outputs: {}
+    steps:
+    - - arguments: {}
+        name: generate
+        template: gen-number-list
+    - - arguments:
+          parameters:
+          - name: seconds
+            value: '{{item}}'
+        name: sleep-n-sec-step
+        template: sleep-n-sec
+        withParam: '{{steps.generate.outputs.result}}'
+      - arguments:
+          parameters:
+          - name: number
+            value: '{{item}}'
+        name: whalesay-step
+        template: whalesay
+        withParam: '{{steps.generate.outputs.result}}'
+    - - arguments:
+          parameters:
+          - name: number
+            value: '{{item}}'
+        name: whalesay-step-finish
+        template: whalesay
+        withParam: '{{steps.generate.outputs.result}}'
+  - arguments: {}
+    inputs: {}
+    metadata: {}
+    name: gen-number-list
+    outputs: {}
+    script:
+      command:
+      - python
+      image: python:alpine3.6
+      name: ""
+      resources: {}
+      source: |
+        import json
+        import sys
+        json.dump([i for i in range(20, 31)], sys.stdout)
+    synchronization:
+      mutex:
+        name: generate-number-list-{{workflow.namespace}}
+  - arguments: {}
+    container:
+      args:
+      - hello world {{inputs.parameters.number}}
+      command:
+      - cowsay
+      image: docker/whalesay:latest
+      name: ""
+      resources: {}
+    inputs:
+      parameters:
+      - name: number
+    metadata: {}
+    name: whalesay
+    outputs: {}
+    synchronization:
+      mutex:
+        name: whalesay-{{workflow.namespace}}
+  - arguments: {}
+    container:
+      args:
+      - echo sleeping for {{inputs.parameters.seconds}} seconds; sleep {{inputs.parameters.seconds}};
+        echo done
+      command:
+      - sh
+      - -c
+      image: alpine:latest
+      name: ""
+      resources: {}
+    daemon: true
+    inputs:
+      parameters:
+      - name: seconds
+    metadata: {}
+    name: sleep-n-sec
+    outputs: {}
